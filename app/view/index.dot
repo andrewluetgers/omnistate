@@ -1,0 +1,23 @@
+<html>
+<head>
+	<meta charSet="utf-8" />
+	<title>{{=it.title}}</title>
+	<base href="{{=it.appRoot}}/">
+	<meta host="{{= it.host }}">
+	<meta httpEquiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="mobile-web-app-capable" content="yes"/>
+	<link rel="stylesheet" type="text/css" href="{{=it.appRoot}}/assets/fonts/museo-sans-non-encoded.css"></link>
+	{{? it.cssPath}}
+	<link rel="stylesheet" type="text/css" href={{=it.cssPath}}></link>
+	{{?}}
+	<script src="{{=it.appRoot}}/assets/polyfills.js"></script>
+	<link rel="shortcut icon" href="{{=it.appRoot}}/assets/favicon.ico" type="image/x-icon">
+</head>
+<body class="layout">
+	<div id="app" class="layout"></div>
+	<script>var initialAppState = {{=it.user}};</script>
+	<script src="{{=it.scriptSrc}}"></script>
+</body>
+</html>
