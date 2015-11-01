@@ -107,21 +107,19 @@ module.exports = {
 	// targeted renders based on state changes
 	// whereas the final render is a full app render, that happens when the url changes
 	callMatching: {
-		operation: _.debounce(function(n, c, eventName, eventNameSpace) {
+		operation: function(n, c, eventName, eventNameSpace) {
+			//console.log("call matching", listeners, arguments);
 			if (c) {
 				callMatchingListeners(listeners[eventNameSpace], n, c);
 			}
-		}, 5, {
-			trailing: true,
-			leading: false,
-			maxWait: 15
-		})
+		}
 	},
 
 	// configure the event nameSpace ahead of time so subscriers need not care about it
 	eventSubscriber: function(eventNameSpace) {
 		var self = this;
 		return function (path, cb) {
+			//console.log("subscribe", eventNameSpace, path, cb);
 			return self.subscribe(eventNameSpace, path, cb);
 		}
 	},
@@ -164,6 +162,7 @@ function getMatches(listeners, changes) {
 
 	var m, matches = [];
 
+	// todo support some kind of ignore children paths list
 	for (var prop in listeners) {
 		if (listeners.hasOwnProperty(prop) && prop !== LKEY && changes && prop in changes) {
 			if (LKEY in listeners[prop]) {

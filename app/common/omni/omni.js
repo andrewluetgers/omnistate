@@ -19,7 +19,10 @@ module.exports = {
 		operations.__renderRoute__ = {
 			require: ['route.pathname'],
 			changes: ['route.pathname'],
-			operation: function (n) {n.route.render();}
+			operation: function (n, c) {
+				//console.log("render route", n);
+				n.route.render();
+			}
 		};
 
 		var _n, _o, _p=[],
@@ -27,7 +30,7 @@ module.exports = {
 		    eventNameSpace = "stateChange";
 
 	    function swapHandler() {
-		    console.time("change observation");
+		    //console.time("change observation");
 		    var _diff = {};
 
 		    if (!root.currentState) {
@@ -37,21 +40,24 @@ module.exports = {
 		    } else {
 			    _p.map(p => {
 				    var newVal = _n.getIn(p),
-				        oldVal = _.get(root.currentState, p);
+				        oldVal = _.get(currentState, p),
+				        nIsObj = newVal && typeof newVal == 'object',
+				        oIsObj = oldVal && typeof oldVal == 'object';
 
-				    if (typeof newVal == 'object' && 'toJS' in newVal) {
+				    if (nIsObj && 'toJS' in newVal) {
 					    newVal = newVal.toJS();
 				    }
 
-				    var pdif = (typeof oldVal == "object" && typeof newVal == "object") ? diff(oldVal, newVal) : newVal;
+				    var pdif = (oIsObj && nIsObj) ? diff(oldVal, newVal) : newVal;
+
 				    _.set(_diff, p, pdif);
-				    _.set(root.currentState, p, newVal);
+				    _.set(currentState, p, newVal);
 			    });
 		    }
 
 		    _o = null;
 		    _p = [];
-		    console.timeEnd("change observation");
+		    //console.timeEnd("change observation");
 
 		    ops.run(operations, root.currentState, _diff, eventNameSpace);
 	    }
@@ -60,7 +66,6 @@ module.exports = {
 		    no = 0;
 
 		config.appState.on('swap', function(n, o, path) {
-			console.log(!_o ? "set old and new" : "set new only" + (no++), new Date().getTime() - now);
 			_p.push(path);
 			_o = _o || o; // don't loose the oldest sate if debouncing
 			_n = n; // always use newest new val

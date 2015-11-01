@@ -8,14 +8,14 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
 	<meta name="apple-mobile-web-app-capable" content="yes"/>
 	<meta name="mobile-web-app-capable" content="yes"/>
-	<link rel="stylesheet" type="text/css" href="{{=it.appRoot}}/assets/fonts/museo-sans-non-encoded.css"></link>
 	{{? it.cssPath}}
 	<link rel="stylesheet" type="text/css" href={{=it.cssPath}}></link>
 	{{?}}
 	<script src="{{=it.appRoot}}/assets/polyfills.js"></script>
+	<script src="{{=it.appRoot}}/assets/stats.min.js"></script>
 	<link rel="shortcut icon" href="{{=it.appRoot}}/assets/favicon.ico" type="image/x-icon">
 </head>
-<body class="layout">
+<body>
 	<div id="app" class="layout"></div>
 	<script>var initialAppState = {{=it.user}};</script>
 	<script src="{{=it.scriptSrc}}"></script>

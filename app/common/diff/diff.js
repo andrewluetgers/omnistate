@@ -31,5 +31,6 @@ module.exports = function diff(template, override) {
 			ret[name] = oVal;
 		}
 	});
+
 	return hasDiff ? ret : null;
 };

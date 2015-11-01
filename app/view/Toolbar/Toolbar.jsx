@@ -13,7 +13,7 @@ module.exports = component('Toolbar', {
 }, function() {
 	return (
 		<div id="toolbar" className="layout">
-			toolbar
+			{this.action}
 		</div>
 	);
 });

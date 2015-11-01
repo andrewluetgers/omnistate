@@ -1,12 +1,15 @@
 
 var _ = 	        require('lodash'),
-	immstruct = 	require('immstruct');
+	immstruct = 	require('immstruct'),
+    alpha =         require('./alpha/alpha');
 
 // this is a stateful module!!
 var appState;
 
 var base = {
 	user: "", // comes from user global on init
+
+	alphTableVisible: true,
 
 	route: { // comes from react-router
 		action: "",
@@ -24,6 +27,7 @@ module.exports.init = function(mixin) {
 
 	appState = immstruct('appState', state);
 	// call other state inits here
+	alpha.init();
 
 	return appState;
 };

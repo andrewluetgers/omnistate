@@ -7,7 +7,7 @@ var React = require('react'),
 
 
 var component = omniscient.withDefaults({ jsx: true });
-component.debug();
+//component.debug();
 
 // touch support
 React.initializeTouchEvents(true);
@@ -23,6 +23,7 @@ var _component = function(displayName, mixins, render) {
 };
 
 _component.configure = function(stateGetter, subscribe) {
+	//console.log("config", arguments);
 	_mixins = mixins.forceUpdateWithSubscription(stateGetter, subscribe);
 };
 
