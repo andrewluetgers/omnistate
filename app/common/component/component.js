@@ -1,12 +1,10 @@
 
 var React = require('react'),
 	Router = require('react-router'),
-	omniscient = require('omniscient'),
 	mixins = require('../componentMixins/componentMixins'),
 	_mixins = {};
 
 
-var component = omniscient.withDefaults({ jsx: true });
 //component.debug();
 
 // touch support
@@ -19,7 +17,11 @@ React.initializeTouchEvents(true);
 // see https://github.com/omniscientjs/omniscient/issues/93#issuecomment-84036856
 var _component = function(displayName, mixins, render) {
 	var o = createDefaultArguments(displayName, mixins, render);
-	return component(o.displayName, o.mixins, o.render);
+	return React.createClass({
+		displayName: displayName,
+		mixins: o.mixins,
+		render: o.render
+	});
 };
 
 _component.configure = function(stateGetter, subscribe) {

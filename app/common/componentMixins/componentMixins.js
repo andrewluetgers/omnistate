@@ -23,11 +23,12 @@ function forceUpdateWithSubscription(getSerializedState, subscribe) {
 			//console.log("subscribe components to matching state changes");
 			var component = this,
 				keyPaths = getKeyPaths(this, "dataBindings"),
-			    getterPaths = getKeyPaths(this, "getters");
-
+			    getterPaths = getKeyPaths(this, "getters"),
+			    kp;
 			//console.log("key paths", keyPaths);
 
 			component._cancel = [];
+			component.bindings = {};
 
 			function forceUpdate() {
 				component.isMounted() && component.forceUpdate();
@@ -39,16 +40,17 @@ function forceUpdateWithSubscription(getSerializedState, subscribe) {
 				}
 
 				// attach cursor to instance
-				component[name] = _.get(getSerializedState(), keyPaths[name].join("."));
+				kp = keyPaths[name].join(".");
+				component.bindings[name] = component[name] = _.get(getSerializedState(), kp);
 
 				// force update on change, store cleanup function for unmount
 				// important, all subscriber callbacks should be === per component
 				// this allows us to avoid multiple renders when multiple changes occur
-				component._cancel.push(subscribe(keyPaths[name].join('.'), forceUpdate));
+				component._cancel.push(subscribe(kp, forceUpdate));
 			}
 
 			for (var name in getterPaths) {
-				console.log("getter path", name, component);
+				//console.log("getter path", name, component);
 				// attach cursor to instance
 				var cap = name[0].toUpperCase(),
 				    rest = name.substr(1),
@@ -70,63 +72,6 @@ function forceUpdateWithSubscription(getSerializedState, subscribe) {
 			for (var name in keyPaths) {
 				component[name] = _.get(getSerializedState(), keyPaths[name]);
 				//console.log("updating dataBindings", name, component[name]);
-			}
-		},
-
-		componentWillUnmount: function() {
-			// cancel observers
-			this._cancel.forEach(function(fn) {fn()});
-		}
-	};
-};
-
-
-/**
- * forceUpdateOnState
- *
- * @param state immstruct structure
- * @returns component mixins {componentWillMount, componentWillUpdate, componentWillUnmount}
- *
- * the parent component should provide to the target component
- * a map of prop names as keys for dataBindings and period delimited path strings
- * on as 'dataBindings' property, e.g. <div dataBindings={{foo: 'bar.foo'}}></div>
- * in the above example: props.foo = state.reference(['bar', 'foo']).cursor()
- * updates will not be top-down component will watch the path ref and
- * force update upon any change
- */
-
-function forceUpdateOnState(state) {
-
-	return {
-		componentWillMount: function() {
-			var component = this;
-			component._cancel = [];
-			// create references, force update on change, attach dataBindings
-			component.references = getReferences(state, component);
-			var refs = component.references;
-
-			for (var name in refs) {
-
-				// attach cursor to instance
-				var ref = refs[name];
-
-				component[name] = ref.cursor();
-
-				// force update on change
-				// store cleanup function unmount
-				component._cancel.push(ref.observe('swap', function() {
-					component.isMounted() && component.forceUpdate();
-				}));
-			}
-		},
-
-		componentWillUpdate: function() {
-			// update dataBindings
-			var component = this,
-				refs = component.references;
-
-			for (var name in refs) {
-				component[name] = refs[name].cursor();
 			}
 		},
 
@@ -193,5 +138,4 @@ function getKeyPaths(component, pathsMember) {
 	return keyPaths;
 }
 
-module.exports.forceUpdateOnState = forceUpdateOnState;
 module.exports.forceUpdateWithSubscription = forceUpdateWithSubscription;

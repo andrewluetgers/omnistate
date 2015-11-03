@@ -21,36 +21,39 @@ var base = {
 };
 
 
-module.exports.init = function(mixin) {
-	var state = _.cloneDeep(base);
-	state = _.assign(state, mixin);
+function init(stateContainer, mixin) {
+	console.log("INIT STATE", arguments);
+	var base = _.cloneDeep(base);
+	base = _.assign(base, mixin);
 
-	appState = immstruct('appState', state);
+	base && stateContainer.init(base);
+	appState = stateContainer;
 	// call other state inits here
 	alpha.init();
+}
 
-	return appState;
-};
+function getter(p) {
+	return appState.update(p);
+}
+function setter(p, v) {
+	return appState.set(p, v);
+}
 
-module.exports.get = function() {
-	return appState;
-};
+function update(p, f) {
+	//console.log("UPDATE", p, f);
+	return appState.update(p, f);
+}
 
-module.exports.cursor = function(path) {
-	return appState.cursor(path);
-};
+function replica() {
+	return appState.replica;
+}
 
-module.exports.update = function() {
-	var cur = appState.cursor();
-	return cur.update.apply(cur, arguments);
-};
 
-module.exports.updateIn = function() {
-	var cur = appState.cursor();
-	return cur.updateIn.apply(cur, arguments);
-};
-
-module.exports.getIn = function() {
-	var cur = appState.cursor();
-	return cur.getIn.apply(cur, arguments);
+// proxy the state container provided via init
+module.exports = {
+	init: init,
+	get: getter,
+	set: setter,
+	update: update,
+	replica: replica
 };

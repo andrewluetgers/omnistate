@@ -1,6 +1,7 @@
 
 var React =         require('react'),
     Link = 			require('react-router').Link,
+    D =			    require('../../common/Direct/Direct.jsx'),
     If =			require('../../common/If/If.jsx'),
     component = 	require('../../common/component/component'),
     state =         require('../../state/state'),
@@ -44,7 +45,9 @@ var AlphaTable = component('AlphaTable', {
 	},
 
 	getCell: function(path) {
-		return <AlphaCell key={path} dataBindings={{cell: 'alpha.layout.'+path}} />
+		return (
+			<AlphaCell key={path} dataBindings={{cell: 'alpha.layout.'+path}} />
+		);
 	},
 
 	getRow: function(row, rowIndex) {

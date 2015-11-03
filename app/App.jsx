@@ -2,35 +2,30 @@
 require('../styles.js').webpackStylesBootstrap();
 
 var React = 		require('react'),
-	Router = 		require('react-router'),
 	appRoutes =     require('../routes'),
-	operations =	require('./operations/operations'),
 	omni = 	        require('./common/omni/omni'),
+	operations =	require('./operations/operations'),
 	state =         require('./state/state');
 
-
-// init our immutable app state with initial state embedded
-// in initial page load exposed via global
-var appState = state.init(window.initialAppState);
-
-var render = omni.init({
+// init the app, configures routing, state, component, operations
+var app = omni.init({
 	containerId:    "app",
-	exposeStateOn:  window,     // currentState will be exposed to this object
-	appState:       appState,   // the immstruct state object
 	appRoutes:      appRoutes,  // see the routes.js module
 	operations:     operations  // see the operations.js module
 });
 
-// ============ !! don't load any components before this point !! ===============
+// the state module needs to be initialized to use the app state container
+// also provide any initial state here that came from page-load to get mixed in
+state.init(app.state, window.initialAppState);
 
+// expose our state read-replica globally for easy debugging
+window.currentState = app.state.replica;
+
+
+// ============ !! don't load any routes or view components before this point !! ===============
 
 var Routes = require('./view/Routes/Routes.jsx');
-
-
-// initial app render / init router
-// note: this app is not using top-down rendering on every state change
-// for details see: https://github.com/omniscientjs/omniscient/issues/93#issuecomment-84812169
-Router.run(Routes, Router.HistoryLocation, render);
+app.initRouter(Routes);
 
 
 window.stats = new Stats();
