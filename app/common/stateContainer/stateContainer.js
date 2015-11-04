@@ -53,34 +53,33 @@ var _ = require('lodash'),
 
 
 function clone(obj) {
-	//console.log("clone", obj);
-	return _.isObject(obj) ? JSON.parse(JSON.stringify(obj)) : obj;
+	return typeof obj == "object" ? JSON.parse(JSON.stringify(obj)) : obj;
 }
 
 
 module.exports = function() {
 
 	var cb = () => console.log(arguments),
-		//protectedState = {},
+		protectedState = {},
 		readReplica = {};
 
 
 	function init(initialState) {
-		//_.assign(protectedState, clone(initialState));
+		_.assign(protectedState, clone(initialState));
 		_.assign(readReplica, clone(initialState));
 	}
 
 	function getState(path) {
-		return clone(_.get(readReplica, path));
+		return clone(_.get(protectedState, path));
 	}
 
 	function setState(path, val) {
-		//console.time("setState");
+		console.time("setState");
 	    var _diff = {},
 		    pdif,
 			replica,
 		    newVal,
-			oldVal = _.get(readReplica, path),
+			oldVal = _.get(protectedState, path),
 		    nIsObj = val && typeof val == 'object',
 		    oIsObj = oldVal && typeof oldVal == 'object',
 		    oldValV = oIsObj && JSON.stringify(oldVal) || oldVal,
@@ -89,27 +88,27 @@ module.exports = function() {
 		if (newValV != oldValV) {
 			if (nIsObj) {
 				newVal = JSON.parse(newValV);
-				//replica = JSON.parse(newValV);
+				replica = JSON.parse(newValV);
 				pdif = oIsObj ? diff(oldVal, newVal) : newVal;
 
 			} else {
 				newVal = newValV;
-				//replica = newValV;
+				replica = newValV;
 				pdif = newValV;
 			}
 
 			_.set(_diff, path, pdif);
-			//_.set(protectedState, path, newVal);
-			_.set(readReplica, path, newVal);
+			_.set(protectedState, path, newVal);
+			_.set(readReplica, path, replica);
 
 			//console.log("state change", protectedState, readReplica, _diff);
 			cb && cb(readReplica, _diff);
 
 		} else {
-			//console.log("no change", protectedState, val);
+			console.log("no change", protectedState, val);
 		}
 
-		//console.timeEnd("setState");
+		console.timeEnd("setState");
 	}
 
 
