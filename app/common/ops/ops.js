@@ -110,7 +110,9 @@ module.exports = {
 		operation: function(n, c, eventName, eventNameSpace) {
 			//console.log("call matching", listeners, arguments);
 			if (c) {
+				console.time('callMatching');
 				callMatchingListeners(listeners[eventNameSpace], n, c);
+				console.timeEnd('callMatching');
 			}
 		}
 	},

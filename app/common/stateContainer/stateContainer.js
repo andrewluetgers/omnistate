@@ -102,13 +102,15 @@ module.exports = function() {
 			_.set(readReplica, path, replica);
 
 			//console.log("state change", protectedState, readReplica, _diff);
+			console.timeEnd("setState");
 			cb && cb(readReplica, _diff);
 
 		} else {
+			console.timeEnd("setState");
 			console.log("no change", protectedState, val);
 		}
 
-		console.timeEnd("setState");
+
 	}
 
 

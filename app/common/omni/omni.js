@@ -57,7 +57,7 @@ module.exports = {
 			require: ['route.pathname'],
 			changes: ['route.pathname'],
 			operation: function (n, c) {
-				//console.log("render route", n);
+				console.log("render route", n);
 				render();
 			}
 		};
