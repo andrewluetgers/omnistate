@@ -64,7 +64,7 @@ See the example code Alpha.jsx for such a case.
 Views react to changes in state. But how does state itself react to 
 changes in state?
 
-The basic idea is that itate-change pattern matching. Operations are simple functions paired with pattern matching expressions.
+The basic idea is that state-change pattern matching. Operations are simple functions paired with pattern matching expressions.
 When the application state matches what an operation is looking for that
 function is triggered with the new state and a diff object showing what changed.
 	
@@ -86,7 +86,8 @@ function is triggered with the new state and a diff object showing what changed.
 
 Now any time the user.id state changes this operation will be triggered to update the user profile.
 
-you can express multiple changes using patch 
+You can express multiple changes in the changes array. In a similar way you can define required (truthy) values in a requires array;
+Path strings in either the changes or requires array can be negated (did not change, is falsy) if they begin with an !.
 
 
 ## But is it immutable?
