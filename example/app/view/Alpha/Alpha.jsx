@@ -1,16 +1,12 @@
 
 var React =         require('react'),
     Link = 			require('react-router').Link,
-    D =			    require('../../common/Direct/Direct.jsx'),
     If =			require('../../common/If/If.jsx'),
-    component = 	require('../../common/component/component'),
-    state =         require('../../state/state'),
+    component = 	require('omnistate').component,
     alphaState =    require('../../state/alpha/alpha');
 
 
 var AlphaCell = component('AlphaCell', {
-
-
 	proxies: {
 		cell: 'alpha.layout.0.0' // provided by parent e.g. <Parent proxies={{cell: 'alpha.layout.0.0'}}/>
 		// will create a this.cell property which is a continually updated

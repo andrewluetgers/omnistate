@@ -1,5 +1,6 @@
 
-var state = require('../../common/omni/omni').state;
+var state = require('omnistate').state;
+//var state = require('../../common/omni/omni').state;
 
 var letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -26,7 +27,7 @@ var defaults = {
 
 module.exports = {
 	init: function(snapshot) {
-		console.log("INIT ALPHA", state);
+		console.log("INIT ALPHA", state.update);
 		state.update('alpha', ()=> {
 			var res = snapshot || defaults;
 			return {

@@ -5,8 +5,9 @@ var React =         require('react'),
     RR =            require('react-router'),
     history =       require('history/lib/createBrowserHistory')(),
     reactDom =      require('react-dom'),
-	omni = 	        require('./common/omni/omni'),
-	appRoutes =     require('../routes'),
+	omni = 	        require('omnistate'),
+	//omni =          require('./common/omni/omni'),
+	appRoutes =     require('../appRoutes'),
 	operations =	require('./operations/operations');
 
 
@@ -16,21 +17,33 @@ var debug = true,
 omni.init(operations, topDownRender, initialState, debug);
 // !! don't load any view components before this point !!
 
-// expose our state for easy debugging
-window.state = omni.state;
+// can now access our state container and api
+var state = omni.state;
 
-// call other state inits here
+// expose state for easy debugging
+window.state = state;
+
+// for more interesting applications initial state configuration above will not suffice
+// you will want to break up initial state and various state methods into multiple files.
+// other modules can access the state container by importing omni and calling getState()
+// but these components need to be initialized after omni.init is called
 require('./state/alpha/alpha').init();
 
 
+// configure router provide the top-down render fn used above
 var {Router, Route, IndexRoute, Link} = RR,
     routes = appRoutes.byAction;
 
+// parent route for all others, provides route state to the state container
 var App = React.createClass({
-
 	render() {
+
+		// though not required the extra route info provided by this appRoutes matcher can
+		// be quite useful when creating operations that respond to specific route patterns
+		// appRoutes also serves react-router config, links and in server.js as a SPA routs white-list
 		var appRoute = appRoutes.match(this.props.location.pathname) || {};
 
+		// omni assumes route information is stored on the state under route
 		state.set('route', {
 			action: appRoute.action,
 			actionPath: appRoute.actionPath,
@@ -43,10 +56,8 @@ var App = React.createClass({
 	}
 });
 
-
-
-
-const Index = React.createClass({
+// basic example
+var Index = React.createClass({
 	render() {
 		console.log("RENDER INDEX", routes);
 		return (
@@ -54,9 +65,6 @@ const Index = React.createClass({
 		);
 	}
 });
-
-
-
 
 
 function topDownRender() {
@@ -70,4 +78,5 @@ function topDownRender() {
 	), document.getElementById('app'));
 }
 
+// initial render
 topDownRender();

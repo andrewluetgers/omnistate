@@ -76,10 +76,10 @@ module.exports = function(debug) {
 
 	return {
 		init: init,
+		setCb: setCb,
 		get: getState,
 		set: setState,
 		update: updateState,
-		setCb: setCb,
 		replica: readReplica
 	};
 };

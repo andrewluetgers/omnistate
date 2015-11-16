@@ -63,7 +63,7 @@ require('./api/api.js')(app);
 
 
 // Serve up the single page app template
-var routes = require('./routes').routes,
+var routes = require('./appRoutes').routes,
 	template = dot.process({path: staticDir + "/assets"}),
 	validRoutes = _.map(routes, function(r) {return r.route;}),
 	hotLoad = runningLocal && runningHot,
