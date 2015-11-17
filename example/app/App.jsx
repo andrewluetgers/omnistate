@@ -6,7 +6,6 @@ var React =         require('react'),
     history =       require('history/lib/createBrowserHistory')(),
     reactDom =      require('react-dom'),
 	omni = 	        require('omnistate'),
-	//omni =          require('./common/omni/omni'),
 	appRoutes =     require('../appRoutes'),
 	operations =	require('./operations/operations');
 

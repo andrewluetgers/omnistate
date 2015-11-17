@@ -91,12 +91,12 @@ Path strings in either the changes or requires array can be negated (did not cha
 
 
 ## But is it immutable?
-This work is largely inspired by practical experence developing with Immutable.js
+This work is largely inspired by practical experience developing with Immutable.js
 backed application state. One of the annoyances there was the api boilerplate and
-constant serialization and deserialization of application state. Omnistate uses a copy on write
-read-replica of the entire app state to provide state to views and operations.
-All state changes go through setters that then update the read replica.
+constant serialization and deserialization of application state. Omnistate provides 
+views and controllers with a read-replica of the app state.
+Copy-on-write process is used as all state changes go through 
+setters that update the source of truth and the read replica.
 
-The read replica is a plain js object and if you make changes to it you will not 
-trigger a state change and your read replica will be different than the true app state object.
-So don't assign values to app state read replicas only use the omnistate.state api methods for updates.
+The read replica is a plain js object, mutations to it will not trigger a state change!
+So don't assign values to app state read-replicas only use the omnistate.state api methods for updates.
