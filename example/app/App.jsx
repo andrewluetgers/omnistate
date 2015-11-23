@@ -10,7 +10,7 @@ var React =         require('react'),
 	operations =	require('./operations/operations');
 
 
-var debug = true,
+var debug = false,
     initialState = {};
 
 omni.init(operations, topDownRender, initialState, debug);

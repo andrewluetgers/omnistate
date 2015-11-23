@@ -149,8 +149,8 @@ module.exports = component('Alpha', {
 // kinda messy but stays out of the react profiling
 window.stats = new Stats();
 stats.domElement.style.position = 'absolute';
-stats.domElement.style.right = '0px';
-stats.domElement.style.top = '0px';
+stats.domElement.style.left = '0px';
+stats.domElement.style.top = '50px';
 document.body.appendChild( stats.domElement );
 
 

@@ -3,63 +3,110 @@
     top 0
     bottom 0
     right 0
-    width 400px
+    width 380px
     overflow auto
-    background rgba(0 0 0 .75)
+    background rgba(0 0 0 .9)
     color #fff
+    -moz-transition all 400ms ease-in-out
+    -webkit-transition all 400ms ease-in-out
+    transition all 400ms ease-in-out
 
-    ul li
-        color #fff
-        cursor pointer
-        margin 0
-        padding 0
+    &.hide
+        display block !important
+        right -368px
 
-        *
+        ul
+        .buttons
+            display none
+
+    .buttons
+        position absolute
+        top 0
+        right 0
+        left 0
+        height 32px
+        white-space nowrap
+        background #000
+
+        button
+            background #000
+            border none
+            color #bbb
+            letter-spacing .032em
+            height 32px
+            padding 0 10px
+
+            &.active
+                background #71c5fb
+                border 0
+                color #0c0119
+
+
+
+
+    ul
+        padding 32px 0 0 0
+
+        li
             color #fff
-            font-weight 300
-            font-size 12px
+            cursor pointer
             margin 0
+            padding 6px 8px 8px 6px
+            border-left solid 6px #000
+            width 100%
+            overflow hidden
+            border-bottom solid 1px #2a2a2a
 
-        .title
-            font-weight 500
-            margin 8px 0
-            padding 10px 8px
-            background rgba(0 0 0 .25)
+            &:hover
+            &.active
+                border-left solid 6px #71c5fb
 
-
-            .msDiff
-                color #b9b9b9
-                display inline-block
-                font-size 10px
-
-            .time
-                margin 0 10px 0 4px
-
-            .date
-                float right
-                font-size 12px
+            *
                 color #bbb
+                font-weight 300
+                font-size 12px
+                margin 0
 
-        .path
-            display inline-block
-            color #70ffa5
-            float left
-            margin 10px 10px
-            font-size 12px
-            line-height 12px
+            .title
+                font-weight 500
+                float right
+                margin 4px 0 2px 0
 
-        .state
-            display inline-block
-            color #ccadff
-            margin 10px 10px
-            font-size 12px
-            line-height 12px
+                .timeDiff
+                    color #b9b9b9
+                    display inline-block
+                    font-size 10px
+
+                .time
+                    margin 0 10px 0 0
+
+                .date
+                    float right
+                    font-size 12px
+                    color #bbb
+
+            .path
+                display inline-block
+                color #70ffa5
+                float left
+                margin 4px 10px 4px 0
+                font-size 12px
+                line-height 12px
+
+            .state
+                display inline-block
+                color #ccadff
+                margin 4px 0 0 0
+                font-size 12px
+                line-height 12px
+                overflow hidden
+                cursor pointer
+
+                &:hover
+                    color #eddeff
 
 
 
-    button.active
-        background #c1effb
-        border 0
 
 
 
