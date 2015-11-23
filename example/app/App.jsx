@@ -65,15 +65,19 @@ var Index = React.createClass({
 	}
 });
 
+var Log = require('./OmniStateTools/OmniStateTools.jsx');
 
 function topDownRender() {
 	reactDom.render((
-			<Router history={history}>
-				<Route path="/" component={App}>
-					<IndexRoute component={Index}/>
-					<Route path={routes.alpha.route} component={require('./view/Base/Base.jsx')}/>
-				</Route>
-			</Router>
+			<div id="appMain">
+				<Router history={history}>
+					<Route path="/" component={App}>
+						<IndexRoute component={Index}/>
+						<Route path={routes.alpha.route} component={require('./view/Base/Base.jsx')}/>
+					</Route>
+				</Router>
+				<Log />
+			</div>
 	), document.getElementById('app'));
 }
 
