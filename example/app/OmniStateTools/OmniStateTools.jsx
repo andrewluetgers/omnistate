@@ -146,6 +146,11 @@ module.exports = omni.component('OmniStateTools', {
 			: <button onClick={this.record}>Record</button>;
 
 	// todo https://github.com/tnrich/react-variable-height-infinite-scroller
+	// snapshot every n changes
+	// gen snapshot and laod it from changes without rendering each change
+	// speed control
+	// timeline
+	// checkpointing add and remove load clear/unload
 	return (
 		<div id="OmniStateTools"
 		     className={this.state.hide ? "hide" : ""}
@@ -159,7 +164,7 @@ module.exports = omni.component('OmniStateTools', {
 				<button onClick={this.stop}>Clear</button>
 			</div>
 
-			<ul>{this.getLogEvents()}</ul>
+			<ul>{this.state.recording ? <li>recording...</li> : this.getLogEvents()}</ul>
 		</div>
 	);
 });
