@@ -1,5 +1,6 @@
 
 var React =     require('react'),
+	Pure =      require('react-addons-pure-render-mixin'),
 	_ =         require('lodash'),
     omni = 	    require('omnistate');
 
@@ -39,6 +40,52 @@ var last = new Date(),
     };
 
 
+var OmniStateHistoryItem = omni.component('OmniStateHistoryItem', {
+
+	mixins: [Pure],
+
+	skipTo: function(ts) {
+		omni.state.history.skipTo(ts);
+		this.props.setState({recording: false});
+	}
+
+}, function() {
+
+	var self = this,
+	    log = this.props.log;
+
+	function minMax(e) {
+		e.stopPropagation();
+		log.max = !log.max;
+		self.update();
+		console.log(log);
+	}
+
+	var d = fmtDate(log.ts),
+	    val = "val" in log ? log.val : log.cp,
+	    pathStr = (log.path && log.path.join) ? log.path.join(".") : log.path || "SNAPSHOT",
+	    valIsObj = typeof val == "object",
+	    path = log.path
+			    ? <div className="path">{pathStr}</div>
+			    : "";
+
+	return (
+		<li className={this.props.active ? "active" : ""} onClick={()=>self.skipTo(log.ts)}>
+			<h3 className="title">
+				<span className="time">{d.time}</span>
+				<span className="timeDiff">{d.diff}</span>
+				<br className="clear" />
+			</h3>
+			{path}
+			<pre className="state" onClick={minMax}>
+				{valIsObj ? JSON.stringify(val, null, log.max ? 2 : null) : val+""}
+			</pre>
+		</li>
+	);
+});
+
+
+
 module.exports = omni.component('OmniStateTools', {
 
 	getInitialState: function() {
@@ -48,12 +95,12 @@ module.exports = omni.component('OmniStateTools', {
 		};
 	},
 
-	onStateChange: function() {
+	onStateChange: _.debounce(function() {
 		if (this.state.view == "log") {
 			//console.log("change", omni.state.history.getLog());
 			this.update();
 		}
-	},
+	}, 1, {maxWait: 30}),
 
 	update: function() {
 		this.isMounted() && this.forceUpdate();
@@ -61,40 +108,14 @@ module.exports = omni.component('OmniStateTools', {
 
 	getLogEvents: function() {
 		var self = this,
-		    currentTs = omni.state.history.getCurrentTs(),
 			vals = omni.state.history.getLog(),
 		    showLog = this.state.view == "log",
-			items = showLog ? vals.log : vals.checkpoints;
+		    items = showLog ? vals.log : vals.checkpoints,
+		    currentTs = omni.state.history.getCurrentTs(),
+		    combined = showLog && _.sortBy(([]).concat(items, vals.autoSnaps), "ts");
 
-		return _.map(items, function(log) {
-
-			function minMax(e) {
-				e.stopPropagation();
-				log.max = !log.max;
-				self.update();
-				console.log(log);
-			}
-
-			var d = fmtDate(log.ts),
-			    val = "val" in log ? log.val : log.cp,
-			    valIsObj = typeof val == "object",
-				path = log.path
-					? <div className="path">{log.path.join ? log.path.join(".") : log.path}</div>
-					: "";
-
-			return (
-				<li key={log.ts} className={currentTs == log.ts ? "active" : ""} onClick={()=>self.skipTo(log.ts)}>
-					<h3 className="title">
-						<span className="time">{d.time}</span>
-						<span className="timeDiff">{d.diff}</span>
-						<br className="clear" />
-					</h3>
-					{path}
-					<pre className="state" onClick={minMax}>
-						{valIsObj ? JSON.stringify(val, null, log.max ? 2 : null) : val+""}
-					</pre>
-				</li>
-			);
+		return _.map(combined || items, function(log) {
+			return <OmniStateHistoryItem key={log.path+log.ts} log={log} active={log.ts == currentTs} setState={function(val) {self.setState(val)}}/>;
 		}).reverse();
 	},
 
@@ -122,9 +143,8 @@ module.exports = omni.component('OmniStateTools', {
 		this.setState({recording: false});
 	},
 
-	skipTo: function(ts) {
-		omni.state.history.skipTo(ts);
-		this.setState({recording: false});
+	recording: function(rec) {
+		this.setState({recording: rec});
 	},
 
 	show: function() {
@@ -164,7 +184,7 @@ module.exports = omni.component('OmniStateTools', {
 				<button onClick={this.stop}>Clear</button>
 			</div>
 
-			<ul>{this.state.recording ? <li>recording...</li> : this.getLogEvents()}</ul>
+			<ul>{this.state.recording ? <li key="rec">recording...</li> : this.getLogEvents()}</ul>
 		</div>
 	);
 });

@@ -29,7 +29,7 @@
     "express": "4.13.3",
     "express-session": "1.12.1",
     "lodash": "*",
-    "react": "^0.14.2",
+    "react": "^0.14.3",
     "react-document-title": "^2.0.1",
     "react-dom": "^0.14.2",
     "react-router": "^1.0.0",
