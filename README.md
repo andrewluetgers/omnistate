@@ -120,7 +120,7 @@ module.exports = {
 		}
 	}
 };
-```js
+```
 
 Now any time the user.id state changes this operation will be triggered to update the user profile.
 
