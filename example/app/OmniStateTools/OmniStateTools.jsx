@@ -1,6 +1,5 @@
 
 var React =     require('react'),
-	Pure =      require('react-addons-pure-render-mixin'),
 	_ =         require('lodash'),
     omni = 	    require('omnistate');
 
@@ -42,7 +41,16 @@ var last = new Date(),
 
 var OmniStateHistoryItem = omni.component('OmniStateHistoryItem', {
 
-	mixins: [Pure],
+	//mixins: [Pure],
+
+	shouldComponentUpdate: function(n) {
+		var p = this.props;
+		return p.active != n.active || p.log != n.log;
+	},
+
+	update: function() {
+		this.isMounted() && this.forceUpdate();
+	},
 
 	skipTo: function(ts) {
 		omni.state.history.skipTo(ts);
@@ -100,7 +108,7 @@ module.exports = omni.component('OmniStateTools', {
 			//console.log("change", omni.state.history.getLog());
 			this.update();
 		}
-	}, 1, {maxWait: 30}),
+	}, 10, {maxWait: 300}),
 
 	update: function() {
 		this.isMounted() && this.forceUpdate();
@@ -184,7 +192,7 @@ module.exports = omni.component('OmniStateTools', {
 				<button onClick={this.stop}>Clear</button>
 			</div>
 
-			<ul>{this.state.recording ? <li key="rec">recording...</li> : this.getLogEvents()}</ul>
+			<ul>{this.state.recording ? <li>recording...</li> : this.getLogEvents()}</ul>
 		</div>
 	);
 });

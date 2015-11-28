@@ -1,6 +1,5 @@
 
 var React =         require('react'),
-    Link = 			require('react-router').Link,
     If =			require('../../common/If/If.jsx'),
     component = 	require('omnistate').component,
     alphaState =    require('../../state/alpha/alpha');
@@ -18,8 +17,25 @@ var AlphaCell = component('AlphaCell', {
 
 }, function() {
 	return (
-		<li key={this.props.key} style={{backgroundColor: this.cell.active ? this.cell.color : "#444444"}}>{this.cell.letter}</li>
+		<li style={{backgroundColor: this.cell.active ? this.cell.color : "#444444"}}>{this.cell.letter}</li>
 	);
+});
+
+
+
+var AlphaRow = component('AlphaRow', {
+	proxies: {
+		row:    '@alpha.layout.0',
+		width:  'alpha.layout.0.length'
+	}
+
+}, function() {
+	var cells = this.row.map((cell, cellIdx) => {
+		var path = this.props.rowIndex+"."+cellIdx;
+		return <AlphaCell key={path} proxies={{cell: 'alpha.layout.'+path}} />
+	});
+
+	return <ul>{cells}</ul>;
 });
 
 
@@ -28,7 +44,7 @@ var AlphaTable = component('AlphaTable', {
 
 	proxies: {
 		layout: "@alpha.layout",
-		width: "alpha.width",
+		//width: "alpha.width",
 		height: "alpha.height"
 		// will create a this.getLayout function
 		// getters are useful when you want easy access
@@ -42,30 +58,33 @@ var AlphaTable = component('AlphaTable', {
 		// that would be very slow
 	},
 
-	Cell: function(path) {
-		return (
-			<AlphaCell key={path} proxies={{cell: 'alpha.layout.'+path}} />
-		);
-	},
+	//Cell: function(path) {
+	//	return (
+	//		<AlphaCell key={path} proxies={{cell: 'alpha.layout.'+path}} />
+	//	);
+	//},
 
-	Row: function(row, rowIndex) {
-		var cells = row.map((cell, cellIdx) => {
-			return this.Cell(rowIndex+"."+cellIdx);
-		});
-
-		return <ul key={rowIndex}>{cells}</ul>;
-	},
+	//Row: function(row, rowIndex) {
+	//	var cells = row.map((cell, cellIdx) => {
+	//		return this.Cell(rowIndex+"."+cellIdx);
+	//	});
+	//
+	//	return <ul key={rowIndex}>{cells}</ul>;
+	//},
 
 	Rows: function(rows) {
-		return rows
-			? rows.map(this.Row)
-			: <ul><li>no data</li></ul>
+		return rows.map(function(row, rowIndex) {
+			return <AlphaRow key={rowIndex} rowIndex={rowIndex} proxies={{
+						row: '@alpha.layout.'+rowIndex,
+						width: 'alpha.layout.'+rowIndex+'.length'
+					}} />
+		});
 	}
 
 }, function() {
-	return (
-		<div id="alphaTable">{this.Rows(this.layout)}</div>
-	);
+	return this.layout
+		? <div id="alphaTable">{this.Rows(this.layout)}</div>
+		: <ul><li>no data</li></ul>;
 });
 
 
