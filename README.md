@@ -1,13 +1,19 @@
 # Omnistate
 
-* Single state container with setters and getters backed by JSON
+* Single, centralized state container with setters and getters backed by JSON
 * High performance with large state objects and high state change volume
 * Views use path strings to declare what state they need (using lodash get and set)
-* State is delivered to views via proxy mixins (read replica + setter)
+* State is delivered to views via proxy mixins (read replica + setter) e.g. get = this.foo, set = this.setFoo(value)
 * Views render independently of parents (but this does not preclude top-down)
 * State change pattern-matching drives "operations" (simple controllers outside of views)
 * In development/debug mode direct mutation of read-replica state is an error
 * Full history API to snapshot, record and replay all state changes. e.g. time traveling, infinite undo/redo
+
+# Usage Example
+npm install from the example folder
+Look at example/app/App.jsx for initialization
+Also look at example/app/operations for middleware
+
 
 # Motivation
 
@@ -42,30 +48,34 @@ bypassing the traditional top-down rendering path.
 This is optional but can be a powerful tool for performance and scalability.
 In worst-case scenarios rendering performance is similar to raw js. See example code.
 
-	module.exports = omnistate.component("UserName", {
-		proxies: {
-			name: "user.name"	
-		}
-	}, function() {
-		return (<div className="userName">{this.name}</div>)
-	});
+```js
+module.exports = omnistate.component("UserName", {
+	proxies: {
+		name: "user.name"	
+	}
+}, function() {
+	return (<div className="userName">{this.name}</div>)
+});
+```
 	
 Our simple UserName component will now reflect any changes to user.name app state.
 How about a list of users? The parent can simply redefine the path via props.
 
-	module.exports = omnistate.component("Users", {
-		proxies: {
-			name: "users"	
-		},
-		userList: function(users) {
-			return _.each(users, function(user, i) {
-				return <li><UserName proxies={{name: "users."+i}}
-			});
-		}
-		
-	}, function() {
-		return <ul>{this.userList(this.users)}</ul>
-	});
+```js
+module.exports = omnistate.component("Users", {
+	proxies: {
+		name: "users"	
+	},
+	userList: function(users) {
+		return _.each(users, function(user, i) {
+			return <li><UserName proxies={{name: "users."+i}}
+		});
+	}
+	
+}, function() {
+	return <ul>{this.userList(this.users)}</ul>
+});
+```
 
 Now if users[10].name is changed only that component will render. 
 The ShouldComponentUpdate functions will not even be triggered for the parents or any siblings.
@@ -73,13 +83,15 @@ This can be a big win when there are many siblings or complex parents to render.
 This of course is an optional feature that can be disabled by declaring the state 
 as an accessor only (no direct rendering on change) Simply prefix the proxy path with @
 
-	module.exports = omnistate.component("UserName", {
-		proxies: {
-			name: "@user.name"
-		}
-	}, function() {
-		return (<div className="userName">{this.name}</div>)
-	});
+```js
+module.exports = omnistate.component("UserName", {
+	proxies: {
+		name: "@user.name"
+	}
+}, function() {
+	return (<div className="userName">{this.name}</div>)
+});
+```
 	
 The view will not force a direct render when the user.name changes. 
 In practice there are few edge cases for needing this capability.
@@ -93,22 +105,22 @@ changes in state?
 The basic idea is that state-change pattern matching. Operations are simple functions paired with pattern matching expressions.
 When the application state matches what an operation is looking for that
 function is triggered with the new state and a diff object showing what changed.
-	
-	// operations.js
-	var state = require('omnistate').state;
 
-	module.exports = {
+```js
+var state = require('omnistate').state;
 
-		profile: {
-			changes: ['user.id'],
-			operation: function(readReplica, diff) {
-				// hypothetical api
-				api.fetchUser(diff.user.id, function(profile) {
-					state.set("user.profile", profile); 
-				});
-			}
+module.exports = {
+	profile: {
+		changes: ['user.id'],
+		operation: function(readReplica, diff) {
+			// hypothetical api
+			api.fetchUser(diff.user.id, function(profile) {
+				state.set("user.profile", profile); 
+			});
 		}
-	};
+	}
+};
+```js
 
 Now any time the user.id state changes this operation will be triggered to update the user profile.
 
