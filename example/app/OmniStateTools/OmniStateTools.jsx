@@ -1,42 +1,29 @@
 
-var React =     require('react'),
-	_ =         require('lodash'),
-    omni = 	    require('omnistate');
+var React =	 require('react'),
+	_ =		 require('lodash'),
+	omni = 		require('omnistate');
 
 
 
 var last = new Date(),
-    fmtDate = function(ts) {
-	    var d = new Date(ts),
-	        diff = d.getTime() - last.getTime(),
-	        diffAbs = Math.abs(diff),
-	        timeDiff = diff + "ms",
-	        time = d.toTimeString().split(" ")[0],
-	        h = parseInt(time.split(":")[0]),
-	        m = time.split(":")[1],
-	        s = time.split(":")[2],
-	        dp = h>12 ? "PM" : "AM",
-	        t = [h%12 || 12, m, s, d.getMilliseconds()].join(":");
+	fmtDate = function(ts) {
+		var d = new Date(ts);
 
-	    if (diffAbs > 1000) {
-		    if (diffAbs > 1000 && diffAbs < 60 * 1000) {
-			    timeDiff = Math.round(diff / 100)/10 + "s";
-		    } else if (diffAbs > 60 * 1000 && diffAbs < 60 * 60 * 1000) {
-			    timeDiff = Math.round(diff / (60 * 100))/10 + " mins"
-		    } else if (diffAbs > 60 * 60 * 1000 && diffAbs < 24 * 60 * 60 * 1000) {
-			    timeDiff = Math.round(diff / (60 * 60 * 100))/10 + " hours"
-		    } else if (diffAbs > 24 * 60 * 60 * 1000) {
-			    timeDiff = Math.round(diff / (60 * 60 * 100))/10 + " days"
-		    }
-	    }
+		d = new Date(d.getTime() - last.getTime());
 
-	    last = d;
-	    return {
-		    diff: timeDiff,
-			time:  t + " " + dp,
-		    date: d.toDateString()
-	    };
-    };
+		var h = d.getUTCHours()%12,
+			m = d.getUTCMinutes(),
+			s = d.getUTCSeconds(),
+			t = (h ? h + ":" : "")
+				+ (m ? (m<10 ? "0"+m : m) + " " : "")
+				+ (s ? (s<10 ? "0"+s : s) + "s " : "")
+				+ d.getMilliseconds() + "ms";
+
+		return {
+			time:  t,
+			date: d.toDateString()
+		};
+	};
 
 
 var OmniStateHistoryItem = omni.component('OmniStateHistoryItem', {
@@ -60,7 +47,7 @@ var OmniStateHistoryItem = omni.component('OmniStateHistoryItem', {
 }, function() {
 
 	var self = this,
-	    log = this.props.log;
+		log = this.props.log;
 
 	function minMax(e) {
 		e.stopPropagation();
@@ -70,18 +57,17 @@ var OmniStateHistoryItem = omni.component('OmniStateHistoryItem', {
 	}
 
 	var d = fmtDate(log.ts),
-	    val = "val" in log ? log.val : log.cp,
-	    pathStr = (log.path && log.path.join) ? log.path.join(".") : log.path || "SNAPSHOT",
-	    valIsObj = typeof val == "object",
-	    path = log.path
-			    ? <div className="path">{pathStr}</div>
-			    : "";
+		val = "val" in log ? log.val : log.cp,
+		pathStr = (log.path && log.path.join) ? log.path.join(".") : log.path || "SNAPSHOT",
+		valIsObj = typeof val == "object",
+		path = log.path
+				? <div className="path">{pathStr}</div>
+				: "";
 
 	return (
 		<li className={this.props.active ? "active" : ""} onClick={()=>self.skipTo(log.ts)}>
 			<h3 className="title">
 				<span className="time">{d.time}</span>
-				<span className="timeDiff">{d.diff}</span>
 				<br className="clear" />
 			</h3>
 			{path}
@@ -98,7 +84,7 @@ module.exports = omni.component('OmniStateTools', {
 
 	getInitialState: function() {
 		return {
-			view:       "log", // log|checkpoints
+			view:	   "log", // log|checkpoints
 			recording:  false
 		};
 	},
@@ -108,7 +94,7 @@ module.exports = omni.component('OmniStateTools', {
 			//console.log("change", omni.state.history.getLog());
 			this.update();
 		}
-	}, 10, {maxWait: 300}),
+	}, 5, {maxWait: 30}),
 
 	update: function() {
 		this.isMounted() && this.forceUpdate();
@@ -116,14 +102,26 @@ module.exports = omni.component('OmniStateTools', {
 
 	getLogEvents: function() {
 		var self = this,
-			vals = omni.state.history.getLog(),
-		    showLog = this.state.view == "log",
-		    items = showLog ? vals.log : vals.checkpoints,
-		    currentTs = omni.state.history.getCurrentTs(),
-		    combined = showLog && _.sortBy(([]).concat(items, vals.autoSnaps), "ts");
+			showSize = 20,
+			setState = function(val) {self.setState(val)},
+			history = omni.state.history,
+			vals = history.getLog(),
+			currentTs = history.getCurrentTs(),
+			showLog = this.state.view == "log",
+			recording = this.state.recording,
+			items = showLog
+				? _.sortBy(([]).concat(vals.log, vals.autoSnaps), "ts")
+				: vals.checkpoints;
 
-		return _.map(combined || items, function(log) {
-			return <OmniStateHistoryItem key={log.path+log.ts} log={log} active={log.ts == currentTs} setState={function(val) {self.setState(val)}}/>;
+		if (recording) {
+			var len = items.length,
+				size = (len-1 >= showSize) ? showSize : len-1;
+
+			items = items.slice(len-size, len);
+		}
+
+		return _.map(items, function(log) {
+			return <OmniStateHistoryItem key={log.ts+"_"+log.path} log={log} active={log.ts == currentTs} setState={setState}/>;
 		}).reverse();
 	},
 
@@ -136,6 +134,7 @@ module.exports = omni.component('OmniStateTools', {
 	},
 
 	record: function() {
+		last = new Date();
 		omni.state.history.startLogging();
 		this.setState({recording: true});
 	},
@@ -167,9 +166,9 @@ module.exports = omni.component('OmniStateTools', {
 }, function() {
 
 	var view = this.state.view,
-	    logActive = view == "log",
+		logActive = view == "log",
 
-	    recButton = this.state.recording
+		recButton = this.state.recording
 			? <button onClick={this.pause}>Pause</button>
 			: <button onClick={this.record}>Record</button>;
 
@@ -181,8 +180,8 @@ module.exports = omni.component('OmniStateTools', {
 	// checkpointing add and remove load clear/unload
 	return (
 		<div id="OmniStateTools"
-		     className={this.state.hide ? "hide" : ""}
-		     onMouseOver={this.show}>
+			 className={this.state.hide ? "hide" : ""}
+			 onMouseOver={this.show}>
 
 			<div className="buttons">
 				<button onClick={this.hide}>&gt;&gt;</button>
@@ -192,7 +191,10 @@ module.exports = omni.component('OmniStateTools', {
 				<button onClick={this.stop}>Clear</button>
 			</div>
 
-			<ul>{this.state.recording ? <li>recording...</li> : this.getLogEvents()}</ul>
+			<ul>
+				{this.getLogEvents()}
+				{this.state.recording ? <li>recording... showing 20 most recent states</li> : null}
+			</ul>
 		</div>
 	);
 });

@@ -4,8 +4,8 @@
     bottom 0
     right 0
     width 380px
-    overflow auto
-    background rgba(0 0 0 .9)
+    overflow hidden
+    background rgba(0 0 0 .8)
     color #fff
     -moz-transition all 400ms ease-in-out
     -webkit-transition all 400ms ease-in-out
@@ -45,14 +45,20 @@
 
 
     ul
-        padding 32px 0 0 0
+        position absolute
+        top 32px
+        bottom 0
+        left 0
+        right 0
+        padding 0
+        overflow scroll
 
         li
             color #fff
             cursor pointer
             margin 0
             padding 6px 8px 8px 6px
-            border-left solid 6px #000
+            border-left solid 6px transparent
             width 100%
             overflow hidden
             border-bottom solid 1px #2a2a2a
