@@ -1,11 +1,37 @@
 # Omnistate
 
-* Single state container
-* Use path strings into state object (backed by lodash get and set)
-* Views declare what state they need using path strings
-* Needed state is delivered to views as state proxy mixins (read replica + setter)
-* State change pattern matching drives "operations" (simple controllers)
-* Views can render independently of parents (does not preclude top-down)
+* Single state container with setters and getters backed by JSON
+* High performance with large state objects and high state change volume
+* Views use path strings to declare what state they need (using lodash get and set)
+* State is delivered to views via proxy mixins (read replica + setter)
+* Views render independently of parents (but this does not preclude top-down)
+* State change pattern-matching drives "operations" (simple controllers outside of views)
+* In development/debug mode direct mutation of read-replica state is an error
+* Full history API to snapshot, record and replay all state changes. e.g. time traveling, infinite undo/redo
+
+# Motivation
+
+OmniState has been developed over the past couple years while working on a couple fairly complex 
+applications. First an Angular 1.x App and another in React. In that time I have tried to make a system
+that avoids complexity, has a few simple ideas and performs well. It takes a unique approach to 
+change observation, controllers, accessing state within views, how view renders are triggered.
+Much effort has also been put into making sure the system performs well with large state objects and 
+a high volume of state changes. Omnistate is currently benchmarked at 180 random cell updates 
+per second on a 100x100 table (In safari, see example).
+
+Basic JSON objects are used instead of immutable data-structures and state is easily accessible and updateable.
+Change observation is performed by routing all changes through setters and diffing the new and old sate. 
+Paths are used heavily leaveraging lodash set and get semantics. 
+These paths help make the diffing more efficient by diffing only from the branch of state that has changed.
+These paths are also used to declare what state a view needs which leads to three very nice things. First
+the state required is fetched for you from the read-replica and made easily available as a mixin.
+Second a setter as it is likely you will want to change that state.
+Finally any time there are any state changes at or under that path the view will render but none of its parents will.
+
+With OmniState you can make a complex app without this.props, this.state or defining a shouldComponentUpdate.
+Obviously this is not your standard approach to react but you are not prevented from using those things. 
+Although it is different I have found this approach to be very nice to work with. 
+It is similar in some respects to [OM Next](https://www.youtube.com/watch?v=ByNs9TG30E8).
 
 
 ## Component (declarative state access)
@@ -98,5 +124,5 @@ views and controllers with a read-replica of the app state.
 Copy-on-write process is used as all state changes go through 
 setters that update the source of truth and the read replica.
 
-The read replica is a plain js object, mutations to it will not trigger a state change!
-So don't assign values to app state read-replicas only use the omnistate.state api methods for updates.
+The read replica is a plain JSON object, mutations to it will not trigger a state change!
+So don't assign values to app state read-replicas only use the OmniState api methods for updates.
