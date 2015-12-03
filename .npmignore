@@ -1,4 +1,5 @@
 .idea
 webpack.config.js
-example
+examples
 .npmignore
+.gitignore

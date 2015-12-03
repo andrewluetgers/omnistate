@@ -2,7 +2,7 @@
   "name": "omnistate",
   "version": "0.1.0",
   "description": "Yet another state sytem for react",
-  "main": "lib/omni.js",
+  "main": "lib/omnistate.js",
   "directories": {
     "example": "example"
   },

@@ -19,6 +19,7 @@ function randomColor() {
 var defaults = {
 	width: 10,
 	height: 10,
+	size: 100,
 	layout: [],
 	run: false,
 	visible: false

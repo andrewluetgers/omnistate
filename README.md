@@ -11,8 +11,8 @@
 
 # Usage Example
 npm install from the example folder
-Look at example/app/App.jsx for initialization
-Also look at example/app/operations for middleware
+Look at example/app/App.jsx for initialization. 
+Also look at example/app/operations for middleware, example/app/view/Alpha
 
 
 # Motivation

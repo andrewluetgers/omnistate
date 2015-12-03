@@ -5,9 +5,8 @@ var React =         require('react'),
     RR =            require('react-router'),
     history =       require('history/lib/createBrowserHistory')(),
     reactDom =      require('react-dom'),
-	omni = 	        require('omnistate'),
-	appRoutes =     require('../appRoutes'),
-	operations =	require('./operations/operations');
+    omni = 	        require('omnistate'),
+    operations =	require('./operations/operations');
 
 
 var debug = false,
@@ -30,22 +29,13 @@ require('./state/alpha/alpha').init();
 
 
 // configure router provide the top-down render fn used above
-var {Router, Route, IndexRoute, Link} = RR,
-    routes = appRoutes.byAction;
+var {Router, Route, IndexRoute, Link} = RR;
 
 // parent route for all others, provides route state to the state container
 var App = React.createClass({
 	render() {
-
-		// though not required the extra route info provided by this appRoutes matcher can
-		// be quite useful when creating operations that respond to specific route patterns
-		// appRoutes also serves react-router config, links and in server.js as a SPA routs white-list
-		var appRoute = appRoutes.match(this.props.location.pathname) || {};
-
-		// omni assumes route information is stored on the state under route
+		// store route information on state
 		state.set('route', {
-			action: appRoute.action,
-			actionPath: appRoute.actionPath,
 			location: this.props.location,
 			params: this.props.params,
 			routeParams: this.props.routeParams
@@ -58,9 +48,8 @@ var App = React.createClass({
 // basic example
 var Index = React.createClass({
 	render() {
-		console.log("RENDER INDEX", routes);
 		return (
-			<Link to={routes.alpha.route}>Alpha</Link>
+			<Link to="/base">Alpha</Link>
 		);
 	}
 });
@@ -69,15 +58,15 @@ var Log = require('./OmniStateTools/OmniStateTools.jsx');
 
 function topDownRender() {
 	reactDom.render((
-			<div id="appMain">
-				<Router history={history}>
-					<Route path="/" component={App}>
-						<IndexRoute component={Index}/>
-						<Route path={routes.alpha.route} component={require('./view/Base/Base.jsx')}/>
-					</Route>
-				</Router>
-				<Log />
-			</div>
+		<div id="appMain">
+			<Router history={history}>
+				<Route path="/" component={App}>
+					<IndexRoute component={Index}/>
+					<Route path={"/base"} component={require('./view/Base/Base.jsx')}/>
+				</Route>
+			</Router>
+			<Log />
+		</div>
 	), document.getElementById('app'));
 }
 
