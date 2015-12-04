@@ -13,14 +13,20 @@ var React =         require('react'),
 var debug = true,
     initialState = {};
 
-omni.init(operations, topDownRender, initialState, debug);
+
+// provide a pushState(state, title, href) implementation that works with React Router
+// this is optional and used support playback of recorded route changes
+function pushState(state, title, href) {
+	console.log("pushState -----", arguments);
+	history.push(href);
+	window.document.title = title;
+}
+
+omni.init(operations, topDownRender, initialState, debug, pushState);
 // !! don't load any view components before this point !!
 
-// can now access our state container and api
-var state = omni.state;
-
 // expose state for easy debugging
-window.state = state;
+window.state = omni.state;
 
 // for more interesting applications initial state configuration above will not suffice
 // you will want to break up initial state and various state methods into multiple files.
@@ -46,7 +52,9 @@ var App = React.createClass({
 		var appRoute = appRoutes.match(this.props.location.pathname) || {};
 
 		// OmniState convention is to store route information under route
-		state.set('route', {
+		omni.state.set('route', {
+			href: window.location.href,
+			title: window.document.title,
 			action: appRoute.action,
 			actionPath: appRoute.actionPath,
 			location: this.props.location,
