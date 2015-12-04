@@ -10,7 +10,7 @@ var React =         require('react'),
 	operations =	require('./operations/operations');
 
 
-var debug = true,
+var debug = false,
     initialState = {};
 
 
@@ -76,7 +76,7 @@ var Index = React.createClass({
 	}
 });
 
-var Log = require('./OmniStateTools/OmniStateTools.jsx');
+var OmniStateTools = require('./OmniStateTools/OmniStateTools.jsx');
 
 function topDownRender() {
 	reactDom.render((
@@ -87,7 +87,7 @@ function topDownRender() {
 						<Route path={routes.alpha.route} component={require('./view/Base/Base.jsx')}/>
 					</Route>
 				</Router>
-				<Log />
+				<OmniStateTools />
 			</div>
 	), document.getElementById('app'));
 }
