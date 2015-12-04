@@ -1,14 +1,13 @@
 {
   "private": true,
   "dependencies": {
-    "todomvc-app-css": "^2.0.0",
-    "todomvc-common": "^1.0.0",
     "classnames": "^2.1.2",
+    "lodash": "^3.10.1",
+    "omnistate": "../../",
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
-    "react-redux": "^4.0.0",
-    "redux": "^3.0.0",
-    "omnistate": "../../"
+    "todomvc-app-css": "^2.0.0",
+    "todomvc-common": "^1.0.0"
   },
   "devDependencies": {
     "babel-core": "^5.6.18",
@@ -21,6 +20,8 @@
     "style-loader": "^0.12.3",
     "webpack": "^1.9.11",
     "webpack-dev-middleware": "^1.2.0",
-    "webpack-hot-middleware": "^2.2.0"
+    "webpack-hot-middleware": "^2.2.0",
+    "css-loader": "^0.9.1",
+    "stylus-loader": "^1.4.2"
   }
 }
