@@ -16,12 +16,12 @@ var last = new Date(),
 			m = d.getUTCMinutes(),
 			s = d.getUTCSeconds(),
 			t = (h ? h + ":" : "")
-				+ (m ? (m<10 ? "0"+m : m) + " " : "")
-				+ (s ? (s<10 ? "0"+s : s) + "s " : "")
+				+ (m ? (m < 10 ? "0" + m : m) + " "  : "")
+				+ (s ? (s < 10 ? "0" + s : s) + "s " : "")
 				+ d.getMilliseconds() + "ms";
 
 		return {
-			time:  t,
+			time: t,
 			date: d.toDateString()
 		};
 	};

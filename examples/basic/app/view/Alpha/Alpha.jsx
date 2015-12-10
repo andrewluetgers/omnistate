@@ -108,7 +108,9 @@ module.exports = component('Alpha', {
 			stats.end();
 			stats.begin();
 
-			alphaState.toggleRandomCell(self.width, self.height);
+			for (var i=0; i<3; i++) {
+				alphaState.toggleRandomCell(self.width, self.height);
+			}
 
 			//cleared = !cleared;
 			//cleared

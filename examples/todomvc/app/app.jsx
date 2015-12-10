@@ -9,7 +9,7 @@ var React =         require('react'),
     operations =	require('./operations/operations');
 
 
-var debug = true,
+var debug = false,
     initialState = {}; // global provided in initial page load could go here
 
 // provide a pushState(state, title, href) implementation that works with React Router

@@ -22,7 +22,7 @@ function pushState(state, title, href) {
 	window.document.title = title;
 }
 
-omni.init(operations, topDownRender, initialState, debug, pushState);
+omni.init(operations, topDownRender, initialState, debug, pushState, true);
 // !! don't load any view components before this point !!
 
 // expose state for easy debugging
