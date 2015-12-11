@@ -72,7 +72,7 @@ var Base = React.createClass({
 });
 
 // basic example
-var OmniStateTools = require('./OmniStateTools/OmniStateTools.jsx');
+var OmniStateTools = require('omnistate-tools');
 
 var App = React.createClass({
 	render() {

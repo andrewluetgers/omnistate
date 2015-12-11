@@ -1,7 +1,6 @@
 {
-  "name": "OmniStruct",
+  "private": true,
   "version": "1.0.0",
-  "description": "Custom rendering strategy for React using Omniscient and Immstruct.",
   "main": "index.js",
   "scripts": {
     "build": "NODE_ENV=production gulp",
@@ -32,6 +31,7 @@
     "react-router": "^1.0.0",
     "lodash": "*",
     "omnistate": "../../",
+    "omnistate-tools": "*",
     "react": "^0.14.3",
     "react-document-title": "^2.0.1",
     "react-dom": "^0.14.2",
