@@ -5,13 +5,12 @@ import todoState from '../../state/todos/todos'
 import TodoItem from '../TodoItem/TodoItem.jsx'
 
 
-
 export default component("TodoItems", {
 	
 	proxies: {
 		todos: 'todos',
-		activeTodoCount: 'activeTodoCount',
-		editing: 'editing'
+		editing: 'editing',
+		activeTodoCount: 'activeTodoCount'
 	},
 	
 	toggleAll: function(event) {
