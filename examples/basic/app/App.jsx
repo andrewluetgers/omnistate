@@ -10,33 +10,33 @@ var React =         require('react'),
 	operations =	require('./operations/operations');
 
 
-var debug = false,
-    initialState = {};
+// init OmniState with settings
+omni.init({
+	pushState:          pushState,
+	useRAFBatching:     true,
+	debug:              false
+});
 
-
-// provide a pushState(state, title, href) implementation that works with React Router
-// this is optional and used support playback of recorded route changes
+// a pushState(state, title, href) implementation that works with React Router
+// this is optional and used to support playback of recorded route changes in OmniStateTools
 function pushState(state, title, href) {
 	console.log("pushState -----", arguments);
 	history.push(href);
 	window.document.title = title;
 }
 
-omni.init(operations, topDownRender, initialState, debug, pushState, true);
-// !! don't load any view components before this point !!
+// init our app state, there may be several of these inits
+require('./state/alpha/alpha').init();
+
+// !!!!!! do not load any view components before this point !!!!!!!
+// ================================================================
+
 
 // expose state for easy debugging
 window.state = omni.state;
 
-// for more interesting applications initial state configuration above will not suffice
-// you will want to break up initial state and various state methods into multiple files.
-// other modules can access the state container by importing omni and calling getState()
-// but these components need to be initialized after omni.init is called
-require('./state/alpha/alpha').init();
-
 // init example controllers
 require('./controllers/example');
-
 
 // configure router provide the top-down render fn used above
 var {Router, Route, IndexRoute, Link} = RR,
@@ -51,7 +51,7 @@ var App = React.createClass({
 		// appRoutes also serves react-router config, links and in server.js as a SPA routs white-list
 		var appRoute = appRoutes.match(this.props.location.pathname) || {};
 
-		// OmniState convention is to store route information under route
+		// OmniState convention is to store this route information under route
 		omni.state.set('route', {
 			href: window.location.href,
 			title: window.document.title,

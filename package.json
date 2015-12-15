@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/andrewluetgers/omnistate",
   "peerDependencies": {
-    "lodash": "^3.0.0"
+    "lodash": "3.x",
+    "history": "1.x"
   }
 }

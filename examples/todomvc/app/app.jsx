@@ -1,99 +1,59 @@
-// for webpack to compile css
-require('./App.styl');
 
-var React =         require('react'),
-    RR =            require('react-router'),
-    history =       require('history/lib/createBrowserHistory')(),
-    reactDom =      require('react-dom'),
-    omni = 	        require('omnistate'),
-    operations =	require('./operations/operations');
+/* ============== OmniState init ============== */
 
+import omni from 'omnistate'
+window.omni = omni; // exposed for easy debugging
 
-var debug = false,
-    initialState = {}; // global provided in initial page load could go here
+// init OmniState
+omni.init({perf: true, debug: true});
 
-// provide a pushState(state, title, href) implementation that works with React Router
-// this is optional and used support playback of recorded route changes
-function pushState(state, title, href) {
-	console.log("pushState -----", arguments);
-	history.push(href);
-	window.document.title = title;
-}
+// initial app state can now be set
+// a nice way to do this is to partition app state into
+// separate files per concern, each living under some state property
+// for example this state is all under 'todos'
+require('./state/state').init();
+require('./state/todos/todos').init();
 
-omni.init(operations, topDownRender, initialState, debug, pushState);
-// ========== !! don't load any view components before this point ======== !!
+// load/init controllers
+// controllers respond to state changes
+// for example this one saves the app state to localstorage
+// when it any state changes and loads it upon initialization
+var storage = require('./controller/storage');
 
-// expose state for easy debugging
-debug && (window.state = omni.state);
+// !!!!! IMPORTANT! DO NOT LOAD ANY OMNISTATE UI COMPONENTS BEFORE THIS POINT !!!!!
+//         DO NOT UES ES6 IMPORT FOR OMNISTATE UI COMPONENTS IN THIS FILE!
 
+// why? OmniState init must run before modules using omnistate.component are loaded
+// es6 imports are hoisted to the top breaking this requirement
 
-// configure router provide the top-down render fn used above
-var {Router, Route, IndexRoute, Link} = RR;
+/* ============== ReactRouter integration ============== */
+import React from 'react'
+import {render} from 'react-dom'
+import {Router, Route, IndexRoute} from 'react-router'
 
-// parent route for all others, provides route state to the state container
-// perhaps there is a better way to hook into React Router to do this?
-var CaptureRouterState = React.createClass({
-	render() {
-		// store route information on state
-		omni.state.set('route', {
-			href: window.location.href,
-			title: window.document.title,
-			location: this.props.location,
-			params: this.props.params,
-			routeParams: this.props.routeParams
-		});
+// !! remember, do not use import on OmniState view components in this file!!
+var TodoApp = require('./view/TodoApp/TodoApp.jsx');
 
-		return this.props.children;
-	}
-});
-
-// basic example
-var Index = React.createClass({
-	render() {
-		return (
-			<div>
-				<h1>Index</h1>
-				<Link to="/base">Base</Link>
-			</div>
-		);
-	}
-});
-
-// basic example
-var Base = React.createClass({
-	render() {
-		return (
-			<div>
-				<h1>Base</h1>
-				<Link to="/">Index</Link>
-			</div>
-		);
-	}
-});
-
-// basic example
-var OmniStateTools = require('omnistate-tools');
-
-var App = React.createClass({
-	render() {
-		return (
-			<div id="appMain">
-				<Router history={history}>
-					<Route path="/" component={CaptureRouterState}>
-						<IndexRoute component={Index}/>
-						<Route path={"/base"} component={Base}/>
-					</Route>
-				</Router>
-				<OmniStateTools/>
-			</div>
-		);
-	}
-});
+// take a look at the omniStateReactRouter to see, as used below,
+// how CaptureRouterState teaches ReactRouter to talk to OmniState
+// and how pushState teaches OmniState to talk to ReactRouter
+import {CaptureRouteState, pushState, history} from 'omnistate/lib/reactRouterIntegration'
 
 
-function topDownRender() {
-	reactDom.render(<App/>, document.getElementById('root'));
-}
+omni.state.setPushState(pushState);
 
-// initial render
-topDownRender();
+// this is place here as opposed to where storage was required above
+// because id depends on being able to use pushstate from ReactRouter integration
+storage.load();
+
+
+render((
+	<Router history={history}>
+		<Route path="/" component={CaptureRouteState}>
+			<IndexRoute component={TodoApp}/>
+			<Route path={"/active"} component={TodoApp}/>
+			<Route path={"/completed"} component={TodoApp}/>
+		</Route>
+	</Router>
+), document.getElementById('root'));
+
