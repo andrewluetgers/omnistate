@@ -45,5 +45,3 @@ export default component("Header", {
 		</header>
 	);
 });
-
-

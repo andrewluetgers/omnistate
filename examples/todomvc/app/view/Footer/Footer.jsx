@@ -9,6 +9,7 @@ export default component("Footer", {
 
 	proxies: {
 		count: 'count',
+		activeCount: 'activeCount',
 		completedCount: 'completedCount',
 		showing: 'showing',
 		todos: 'todos'
@@ -16,11 +17,11 @@ export default component("Footer", {
 
 }, function() {
 
-	var showing =            this.showing,
+	var showing =           this.showing,
 		allClass =          showing == "all" ? 'selected' : '',
 		activeClass =       showing == "active" ? 'selected' : '',
 		completedClass =    showing == "completed" ? 'selected' : '',
-		activeTodoWord =    this.count == 1 ? 'item' : 'items',
+		activeTodoWord =    this.activeCount == 1 ? 'item' : 'items',
 		clearButton =       null;
 
 	if (this.completedCount > 0) {
@@ -37,7 +38,7 @@ export default component("Footer", {
 		<footer className="footer">
 
 			<span className="todo-count">
-				<strong>{this.count}</strong> {activeTodoWord} left
+				<strong>{this.activeCount}</strong> {activeTodoWord} left
 			</span>
 
 			<ul className="filters">

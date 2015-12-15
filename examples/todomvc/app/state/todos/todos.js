@@ -1,9 +1,7 @@
 
 import {state} from 'omnistate'
 
-
-var _id = 1000;
-function id() {return _id+=1}
+function uid() {return new Date().getTime()}
 
 function setTodos(updFn) {
 	state.update("todos", updFn);
@@ -12,12 +10,16 @@ function setTodos(updFn) {
 export default {
 
 	init: function() {
-		setTodos(() => []);
+		state.merge({
+			todos: [],
+			activeTodos: [],
+			completedTodos: []
+		});
 	},
 
 	addTodo: function(title) {
 		setTodos(todos => todos.concat({
-			id: id(),
+			id: uid(),
 			title: title,
 			completed: false
 		}));

@@ -9,8 +9,9 @@ export default component("TodoItems", {
 	
 	proxies: {
 		todos: 'todos',
+		showing: 'showing',
 		editing: 'editing',
-		activeTodoCount: 'activeTodoCount'
+		activeTodoCount: 'activeCount'
 	},
 	
 	toggleAll: function(event) {
@@ -19,6 +20,7 @@ export default component("TodoItems", {
 
 	getShownTodos: function() {
 		return this.todos.filter(todo => {
+			console.log("filter todo", this.showing, todo);
 			switch (this.showing) {
 				case 'active':      return !todo.completed;
 				case 'completed':   return todo.completed;
@@ -29,6 +31,7 @@ export default component("TodoItems", {
 
 	getTodoItems: function() {
 		return this.getShownTodos().map((todo, idx) => {
+			console.log("shown todo", todo, idx);
 			return (
 				<TodoItem key={todo.id} proxies={{todo: 'todos.'+idx}} />
 			);
@@ -47,7 +50,7 @@ export default component("TodoItems", {
 				className="toggle-all"
 				type="checkbox"
 				onChange={this.toggleAll}
-				checked={this.activeTodoCount === 0}
+				checked={this.activeCount === 0}
 			/>
 
 			<ul className="todo-list">

@@ -8,15 +8,15 @@ export default {
 	init: function() {
 		state.init({
 			todos: null, // see todos.js
+			activeTodos: null, // see todos.js
+			completedTodos: null, // see todos.js
+
 			editing: null, // null or some todo id
 			editText: '', // the inline edit text input value
 			newTodo: '', // the main text input value
 
 			// see computed values below
-			showing: 'all', // all | active | completed
-			count: 0,
-			activeTodoCount: 0,
-			completedCount: 0
+			showing: 'all' // all | active | completed
 		});
 	}
 
@@ -36,22 +36,5 @@ computed({
 		}
 	],
 
-	'count': [
-		['todos.length'],
-		length => length
-	],
-
-	'activeTodoCount': [
-		['todos'],
-		todos => {
-			console.log("todos", todos);
-			return reduce(todos, (accum, todo) => {
-				return todo.completed ? accum : accum + 1;
-			}, 0)
-		}
-	],
-	'completedCount': [
-		['count', 'activeTodoCount'],
-		(count, activeTodoCount) => count - activeTodoCount
-	]
+	'showing2': 'showing'
 });
