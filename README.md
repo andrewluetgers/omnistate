@@ -9,13 +9,23 @@
 * In development/debug mode direct mutation of read-replica state is an error
 * Full history API to snapshot, record and replay all state changes. e.g. time traveling, infinite undo/redo
 
-# Usage Example
-npm install from the example folder
-Look at example/app/App.jsx for initialization. 
-Also look at example/app/operations for middleware, example/app/view/Alpha
+
+## Still in Beta
+This is not on npm yet as it is still in heavy development
+but if you want to try it out you can run the example or 
+use it by requiring from your file system.
 
 
-# Motivation
+## Run the Example
+from the examples/todomvc folder...
+
+```js
+npm install
+npm start
+```
+
+
+## Motivation
 
 OmniState has been developed over the past couple years while working on a couple fairly complex 
 applications. First an Angular 1.x App and another in React. In that time I have tried to make a system
