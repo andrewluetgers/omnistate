@@ -65,7 +65,7 @@ export default {
 	
 	clearCompleted: function() {
 		var activeById = {};
-		_.each(state.get('activeTodoIds'), t => activeById[t.id] = t);
+		_.each(state.get('activeTodoIds'), id => activeById[id] = state.get(['todosById', id]));
 		state.set("todosById", activeById);
 	}
 };
