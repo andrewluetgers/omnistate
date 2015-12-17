@@ -173,17 +173,6 @@ computed({
 });
 ```
 
-## TODO Cover more features
-Lots more to cover, for now look at the TodoMVC example to learn more.
-
-- React Router integration
-- history api 
-- OmniState Tools run the example to try it out!
-- not limited to React Router or even React for that matter
-- more on normalizr and falcor integration
-- beware the "basic" example is currently borked
-
-
 ## But is it immutable?
 This work is largely inspired by practical experience developing with Immutable.js
 backed application state. One of the annoyances there was the api boilerplate and
@@ -194,3 +183,14 @@ setters that update the source of truth and the read replica.
 
 The read replica is a plain JSON object, mutations to it will not trigger a state change!
 So don't assign values to app state read-replicas only use the OmniState api methods for updates.
+
+
+## More to Cover...
+Lots more to do and cover but for now look at the TodoMVC example to learn more.
+
+- React Router integration
+- history api 
+- OmniState Tools run the example to try it out!
+- not limited to React Router or even React for that matter
+- more on normalizr and falcor integration
+- beware the "basic" example is currently borked
