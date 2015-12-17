@@ -97,35 +97,81 @@ The view will not force a direct render when the user.name changes.
 In practice there are few edge cases for needing this capability.
 See the example code Alpha.jsx for such a case.
 
-## Operations (simple controllers/middleware)
+## Controllers and Computed Values
 
 Views react to changes in state. But how does state itself react to 
 changes in state?
 
-The basic idea is that state-change pattern matching. Operations are simple functions paired with pattern matching expressions.
-When the application state matches what an operation is looking for that
-function is triggered with the new state and a diff object showing what changed.
+Controllers are much like views, they can be triggerd by binding to specific state changes
+declared in a proxies property. Both views and controllers can respond to all state changes 
+by adding through an onStateChange function. The differnce of course is that a controller
+is concerned only with updating app state or other non-rendering operations such as 
+saving state changes to local storage as in the provided TodoMVC example.
+
 
 ```js
-var state = require('omnistate').state;
+import {debounce} from 'lodash'
+import omni from 'omnistate'
 
-module.exports = {
-	profile: {
-		changes: ['user.id'],
-		operation: function(readReplica, diff) {
-			// hypothetical api
-			api.fetchUser(diff.user.id, function(profile) {
-				state.set("user.profile", profile); 
-			});
-		}
-	}
-};
+var history = omni.state.history;
+
+export default omni.controller("saveState", {
+
+	// load saved app state
+	load: function() {
+		history.loadLatestCheckpoint();
+	},
+
+	save: function() {
+		history.clearCheckpoints();
+		history.checkpoint();
+	},
+
+	// triggered on ANY state change so we debounce
+	onStateChange: debounce(function() {
+		console.log("state saved", omni.state.replica);
+		this.save();
+	}, 500, {maxWait: 5000})
+});
 ```
 
-Now any time the user.id state changes this operation will be triggered to update the user profile.
+Computed values are built on top of controllers and provide a handy 
+syntax for defining computed values. Computed values are one way so treat them as
+read only. Here is another example from the TodoMVC example. It takes the 
+source of truth, 'todosById' and creates three different collections.
+Only the ids are stored in these secondary collections, this normalized approach
+has several benefits and OmniState works best in this manner. For larger projects
+consider using something like [Normalizr](https://github.com/gaearon/normalizr) to help with this approach, however with
+computed values it is trivial to setup.
 
-You can express multiple changes in the changes array. In a similar way you can define required (truthy) values in a requires array;
-Path strings in either the changes or requires array can be negated (did not change, is falsy) if they begin with an !.
+```js
+computed({
+	allTodoIds: [
+		['todosById'],
+		todosById => _(todosById).sortBy('id').pluck('id').value()
+	],
+
+	activeTodoIds: [
+		['todosById'],
+		todosById => _(todosById).filter({completed: false}).sortBy('id').pluck('id').value()
+	],
+
+	completedTodoIds: [
+		['todosById'],
+		todosById => _(todosById).filter({completed: true}).sortBy('id').pluck('id').value()
+	]
+});
+```
+
+## TODO Cover more features
+Lots more to cover, for now look at the TodoMVC example to learn more.
+
+- React Router integration
+- history api 
+- OmniState Tools run the example to try it out!
+- not limited to React Router or even React for that matter
+- more on normalizr and falcor integration
+- beware the "basic" example is currently borked
 
 
 ## But is it immutable?

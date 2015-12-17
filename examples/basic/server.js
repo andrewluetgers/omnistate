@@ -1,14 +1,19 @@
-var os = 				require('os'),
-    express = 			require('express'),
-    path =				require('path'),
-    favicon =			require("serve-favicon"),
-	serveStatic =		require("serve-static"),
-	bodyParser =		require("body-parser"),
-	session = 			require("express-session"),
-	compression =		require('compression'),
-	cookieParser = 		require("cookie-parser"),
-	dot = 				require("dot"),
-    _ =					require("lodash");
+
+var webpack =               require('webpack'),
+	webpackDevMiddleware =  require('webpack-dev-middleware'),
+	webpackHotMiddleware =  require('webpack-hot-middleware'),
+	config =                require('./webpack.config'),
+	os = 					require('os'),
+    express = 				require('express'),
+    path =					require('path'),
+    favicon =				require("serve-favicon"),
+	serveStatic =			require("serve-static"),
+	bodyParser =			require("body-parser"),
+	session = 				require("express-session"),
+	compression =			require('compression'),
+	cookieParser = 			require("cookie-parser"),
+	dot = 					require("dot"),
+    _ =						require("lodash");
 
 // config
 var env = 				process.env,

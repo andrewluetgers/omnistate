@@ -72,7 +72,6 @@ export default {
 
 
 computed({
-
 	allTodoIds: [
 		['todosById'],
 		todosById => _(todosById).sortBy('id').pluck('id').value()

@@ -16,6 +16,7 @@ export default omni.controller("saveState", {
 		history.checkpoint();
 	},
 
+	// triggered on ANY state change so we debounce
 	onStateChange: debounce(function() {
 		console.log("state saved", omni.state.replica);
 		this.save();

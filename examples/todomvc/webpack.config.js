@@ -25,17 +25,3 @@ module.exports = {
 		]
 	}
 };
-
-
-// When inside omnistate repo, prefer src to compiled version.
-// You can safely delete these lines in your project.
-//var fs = require('fs'),
-//	omnistateSrc = path.join(__dirname, '..', '..', 'lib');
-//
-//if (fs.existsSync(omnistateSrc)) {
-//	// Resolve omnistate to source
-//	module.exports.resolve = { alias: { 'omnistate': omnistateSrc } };
-//	// Compile omnistate from source
-//	module.exports.module.loaders.push({test: /\.js$|\.jsx$/, loaders: [ 'babel' ], include: omnistateSrc})
-//}
-
