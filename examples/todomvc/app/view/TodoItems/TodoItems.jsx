@@ -8,10 +8,11 @@ import TodoItem from '../TodoItem/TodoItem.jsx'
 export default component("TodoItems", {
 	
 	proxies: {
-		todos: 'todos',
+		allTodoIds: 'allTodoIds',
+		completedTodoIds: 'completedTodoIds',
+		activeTodoIds: 'activeTodoIds',
 		showing: 'showing',
-		editing: 'editing',
-		activeTodoCount: 'activeCount'
+		editing: 'editing'
 	},
 	
 	toggleAll: function(event) {
@@ -19,29 +20,24 @@ export default component("TodoItems", {
 	},
 
 	getShownTodos: function() {
-		return this.todos.filter(todo => {
-			console.log("filter todo", this.showing, todo);
-			switch (this.showing) {
-				case 'active':      return !todo.completed;
-				case 'completed':   return todo.completed;
-				default:            return true;
-			}
-		});
+		switch (this.showing) {
+			case 'active':      return this.activeTodoIds;
+			case 'completed':   return this.completedTodoIds;
+			default:            return this.allTodoIds;
+		}
 	},
 
 	getTodoItems: function() {
-		return this.getShownTodos().map((todo, idx) => {
-			console.log("shown todo", todo, idx);
+		return this.getShownTodos().map((todoId) => {
 			return (
-				<TodoItem key={todo.id} proxies={{todo: 'todos.'+idx}} />
+				<TodoItem key={todoId} proxies={{todo: 'todosById.'+todoId}} />
 			);
 		});
 	}
 	
 }, function() {
 
-	var todos = this.todos,
-	    len = todos && todos.length;
+	var len = this.allTodoIds && this.allTodoIds.length;
 	
 	return len ? (
 		<section className="main">
@@ -50,7 +46,7 @@ export default component("TodoItems", {
 				className="toggle-all"
 				type="checkbox"
 				onChange={this.toggleAll}
-				checked={this.activeCount === 0}
+				checked={this.activeTodoIds.length === 0}
 			/>
 
 			<ul className="todo-list">

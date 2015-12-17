@@ -11,9 +11,9 @@ var ESCAPE_KEY = 27,
 export default omni.component("TodoItem", {
 
 	proxies: {
-		todo: "todos.0",
+		todo: "todosById.xxxxxx",
 		// will be overwritten by parent via proxies prop
-		// e.g. <TodoItem proxies={{todo: "todos." + i }}
+		// e.g. <TodoItem proxies={{todo: "todosById." + id }}
 
 		editing: 'editing',
 		editText: 'editText'

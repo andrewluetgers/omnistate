@@ -8,9 +8,9 @@ import todoState from '../../state/todos/todos'
 export default component("Footer", {
 
 	proxies: {
-		count: 'count',
-		activeCount: 'activeCount',
-		completedCount: 'completedCount',
+		count: 'allTodoIds.length',
+		activeCount: 'activeTodoIds.length',
+		completedCount: 'completedTodoIds.length',
 		showing: 'showing',
 		todos: 'todos'
 	}

@@ -7,9 +7,11 @@ export default {
 
 	init: function() {
 		state.init({
-			todos: null, // see todos.js
-			activeTodos: null, // see todos.js
-			completedTodos: null, // see todos.js
+			// see todos.js for these
+			todosById: null,
+			allTodoIds: null,
+			activeTodoIds: null,
+			completedTodoIds: null,
 
 			editing: null, // null or some todo id
 			editText: '', // the inline edit text input value
@@ -34,7 +36,5 @@ computed({
 				default:            return "all";
 			}
 		}
-	],
-
-	'showing2': 'showing'
+	]
 });
