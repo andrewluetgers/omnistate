@@ -3,12 +3,15 @@
 * Single, centralized state container with setters and getters backed by JSON
 * High performance with large state objects and high state change volume
 * Views use path strings to declare what state they need (using lodash get and set)
-* State is delivered to views via proxy mixins (read replica + setter) e.g. get = this.foo, set = this.setFoo(value)
+* State is delivered to views via proxy mixins (read replica + setter) e.g. get = this.foo, set = this.setFoo(value) or updateFoo(reducerFn) or mergeFoo(keysAndValuesObject)
 * Views render independently of parents (but this does not preclude top-down)
 * State change pattern-matching drives "operations" (simple controllers outside of views)
 * In development/debug mode direct mutation of read-replica state is an error
 * Full history API to snapshot, record and replay all state changes. e.g. time traveling, infinite undo/redo
 
+<img width="971" alt="screen shot 2015-12-20 at 12 20 35 pm" src="https://cloud.githubusercontent.com/assets/232036/11919316/85df0228-a714-11e5-897c-0f0956ebf14c.png">
+
+<img width="598" alt="screen shot 2015-12-20 at 12 22 51 pm" src="https://cloud.githubusercontent.com/assets/232036/11919314/80ae020e-a714-11e5-892e-cb815706c544.png">
 
 ## Still in Beta
 This is not on npm yet as it is still in heavy development
@@ -17,11 +20,12 @@ use it by requiring from your file system.
 
 
 ## Run the Example
-from the examples/todomvc folder...
+from the examples/todomvc or examples/basic folder...
 
 ```js
 npm install
 npm start
+open http://localhost:3000
 ```
 
 
@@ -105,7 +109,7 @@ module.exports = omnistate.component("UserName", {
 	
 The view will not force a direct render when the user.name changes. 
 In practice there are few edge cases for needing this capability.
-See the example code Alpha.jsx for such a case.
+See the simpl example code Alpha.jsx for such a case.
 
 ## Controllers and Computed Values
 
@@ -114,7 +118,7 @@ changes in state?
 
 Controllers are much like views, they can be triggerd by binding to specific state changes
 declared in a proxies property. Both views and controllers can respond to all state changes 
-by adding through an onStateChange function. The differnce of course is that a controller
+by adding an onStateChange function. The differnce of course is that a controller
 is concerned only with updating app state or other non-rendering operations such as 
 saving state changes to local storage as in the provided TodoMVC example.
 
@@ -183,14 +187,13 @@ setters that update the source of truth and the read replica.
 
 The read replica is a plain JSON object, mutations to it will not trigger a state change!
 So don't assign values to app state read-replicas only use the OmniState api methods for updates.
+In fact if you initialize omnistate with the dev option true it will throw an error if at any time you mutate the read replica rather than useing the state setters interface.
 
 
 ## More to Cover...
 Lots more to do and cover but for now look at the TodoMVC example to learn more.
-
 - React Router integration
 - history api 
 - OmniState Tools run the example to try it out!
 - not limited to React Router or even React for that matter
 - more on normalizr and falcor integration
-- beware the "basic" example is currently borked
