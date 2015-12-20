@@ -9,6 +9,9 @@
 * In development/debug mode direct mutation of read-replica state is an error
 * Full history API to snapshot, record and replay all state changes. e.g. time traveling, infinite undo/redo
 
+<img width="971" alt="screen shot 2015-12-20 at 12 20 35 pm" src="https://cloud.githubusercontent.com/assets/232036/11919316/85df0228-a714-11e5-897c-0f0956ebf14c.png">
+
+<img width="598" alt="screen shot 2015-12-20 at 12 22 51 pm" src="https://cloud.githubusercontent.com/assets/232036/11919314/80ae020e-a714-11e5-892e-cb815706c544.png">
 
 ## Still in Beta
 This is not on npm yet as it is still in heavy development
@@ -193,4 +196,3 @@ Lots more to do and cover but for now look at the TodoMVC example to learn more.
 - OmniState Tools run the example to try it out!
 - not limited to React Router or even React for that matter
 - more on normalizr and falcor integration
-- beware the "basic" example is currently borked
