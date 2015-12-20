@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "NODE_ENV=production gulp",
-    "dev": "NODE_ENV=local BUILD_ENV=hot node --debug server & NODE_ENV=local gulp dev --progress",
+    "dev": "NODE_ENV=local BUILD_ENV=hot node --debug server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -64,6 +63,7 @@
     "stylus-loader": "^1.4.2",
     "supervisor": "^0.6.0",
     "webpack": "^1.12.6",
-    "webpack-dev-server": "^1.0.0"
+    "webpack-dev-middleware": "^1.2.0",
+    "webpack-hot-middleware": "^2.2.0"
   }
 }

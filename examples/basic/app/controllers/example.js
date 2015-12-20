@@ -5,17 +5,21 @@ export default {
 		omni.controller("widthExample", {
 			proxies: {
 				width: 'alpha.width'
+			},
+
+			exec: function() {
+				console.log("example controller width -------------------", arguments, this, this.width);
 			}
-		}, function() {
-			console.log("example controller width -------------------", arguments, this, this.width);
 		});
 
 		omni.controller("sizeExample", {
 			proxies: {
 				size: 'alpha.size'
+			},
+
+			exec: function() {
+				console.log("example controller size-------------------", this, this.size);
 			}
-		}, function() {
-			console.log("example controller size-------------------", this, this.size);
 		});
 
 

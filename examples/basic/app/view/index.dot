@@ -17,7 +17,6 @@
 </head>
 <body>
 	<div id="app" class="layout"></div>
-	<script>var initialAppState = {{=it.user}};</script>
-	<script src="{{=it.scriptSrc}}"></script>
+	<script src="/static/bundle.js"></script>
 </body>
 </html>
