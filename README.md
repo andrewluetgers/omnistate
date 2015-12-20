@@ -25,6 +25,7 @@ from the examples/todomvc or examples/basic folder...
 ```js
 npm install
 npm start
+open http://localhost:3000
 ```
 
 
