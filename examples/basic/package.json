@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "NODE_ENV=local BUILD_ENV=hot node --debug server",
+    "start": "NODE_ENV=local BUILD_ENV=hot node --debug server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
