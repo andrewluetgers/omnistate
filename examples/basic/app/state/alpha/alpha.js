@@ -20,6 +20,7 @@ var defaults = {
 	width: 10,
 	height: 10,
 	size: 100,
+	updatesPerFrame: 1,
 	layout: [],
 	run: false,
 	visible: false
@@ -34,6 +35,7 @@ module.exports = {
 			return {
 				width: res.width,
 				height: res.height,
+				updatesPerFrame: res.updatesPerFrame || 1,
 				layout:  this.blankTable(res.width, res.height),
 				run: res.run,
 				visible: res.visible

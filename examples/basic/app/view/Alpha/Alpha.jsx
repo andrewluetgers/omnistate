@@ -96,7 +96,8 @@ module.exports = component('Alpha', {
 	proxies: {
 		visible: "alpha.visible",
 		width: "alpha.width",
-		height: "alpha.height"
+		height: "alpha.height",
+		updatesPerFrame: 'alpha.updatesPerFrame'
 	},
 
 	running: false,
@@ -108,7 +109,7 @@ module.exports = component('Alpha', {
 			stats.end();
 			stats.begin();
 
-			for (var i=0; i<3; i++) {
+			for (var i=0; i<self.updatesPerFrame; i++) {
 				alphaState.toggleRandomCell(self.width, self.height);
 			}
 
@@ -140,6 +141,11 @@ module.exports = component('Alpha', {
 		alphaState.clearTheTable(this.width, this.height);
 	},
 
+	handleUpdatesChange: function(e) {
+		console.log(this.updatesPerFrame, e.target.value);
+		this.setUpdatesPerFrame(e.target.value || 1);
+	},
+
 	componentWillUnmount: function() {
 		this.stop();
 	}
@@ -153,6 +159,7 @@ module.exports = component('Alpha', {
 				<button onClick={()=> alphaState.newLayout(5, 10)}>5x10</button>
 				<button onClick={()=> alphaState.newLayout(10, 10)}>10x10</button>
 				<button onClick={()=> alphaState.newLayout(100, 100)}>100x100</button>
+				<input type="text" value={this.updatesPerFrame} onChange={(e)=>this.handleUpdatesChange(e)} />
 			</div>
 			<button onClick={this.start}>Start</button>
 			<button onClick={this.stop}>Stop</button>
